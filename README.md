@@ -50,7 +50,7 @@ Each student creates a 4- or 6-digit attendance PIN on first login. The first su
 3. Tap **START ATTENDANCE**.
 4. The backend creates and commits a session, then returns its 90-second expiry and token schedule.
 5. Only after that response does the app start BLE advertising and display the countdown. A Render cold start therefore happens before the usable countdown begins.
-6. The app rotates the advertised token every 10 seconds and refreshes the present list every few seconds.
+6. The app rotates the advertised token every 10 seconds and refreshes the present list every few seconds. On Android 8+, the packet is updated inside one persistent advertising instance so rotation does not consume additional BLE hardware slots. Android 7 uses a stop/restart fallback with a release delay and retry.
 7. Tap **STOP ATTENDANCE** or let the timer expire; advertising stops in both cases.
 
 If the phone does not support BLE peripheral/advertiser mode, the app closes the backend session and shows a clear error. Most modern Android phones support it, but some low-end devices do not.
@@ -68,6 +68,8 @@ If the phone does not support BLE peripheral/advertiser mode, the app closes the
 ## BLE design: listening, not connecting
 
 The Android bridge uses `BluetoothLeAdvertiser` for the teacher and `BluetoothLeScanner` for students. The advertisement is explicitly non-connectable. The student never opens a GATT connection and never initiates Bluetooth pairing.
+
+Android advertising failure code `2` means the phone reports that no BLE advertising instance is available. Release 1.0.1 retries transient slot-release failures automatically. If it still occurs before a session starts, close other beacon/BLE-broadcast apps, turn Bluetooth off and back on, and retry. Persistent failure on one model means that model's firmware is not exposing a usable advertiser; use that phone as a student scanner and choose another supported phone for Teacher Mode.
 
 The fixed service UUID is `0000A77E-0000-1000-8000-00805F9B34FB`. A legacy-size-safe manufacturer payload contains:
 
@@ -210,7 +212,7 @@ With the Render HTTPS backend, the four phones do **not** need to be on the same
 6. Confirm it shows `Machine Learning`, `Teacher detected nearby ✓`, and a signal label.
 7. Tap **MARK ATTENDANCE**, enter the PIN, and confirm `Attendance Marked ✓`.
 8. Within a few seconds Phone A should show `Students Present: 1` and Rahul Sharma in the list.
-9. Reinstalling the app (which creates a new installation ID) and logging in as `student001` should return `DEVICE_MISMATCH`. To repeat from a clean demo database, stop the backend and delete the local `attendance.db` file, then restart.
+9. Uninstalling the app (or clearing its app data), reinstalling it, and logging in as `student001` creates a new installation ID and should return `DEVICE_MISMATCH`. Installing an update over the existing app preserves the binding. To repeat from a clean demo database, stop the backend and delete the local `attendance.db` file, then restart.
 10. A direct repeated API submission returns `ALREADY_MARKED`. After 90 seconds, further attempts return `SESSION_EXPIRED` and the app shows attendance closed.
 
 ## Known MVP limitations
