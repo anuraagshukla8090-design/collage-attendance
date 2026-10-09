@@ -1,0 +1,1 @@
+"""BLE Attendance MVP backend."""
