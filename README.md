@@ -127,7 +127,7 @@ flutter pub get
 flutter run --dart-define=API_BASE_URL=http://YOUR_COMPUTER_LAN_IP:8000
 ```
 
-For the Android emulator, the default `http://10.0.2.2:8000` reaches the host machine. Physical phones cannot use `localhost` or `10.0.2.2`; use the computer's Wi-Fi/LAN address (for example `http://192.168.1.20:8000`) and allow port 8000 through the firewall. Both phones and the computer should be on the same network.
+The default API URL is the deployed demo at `https://ble-attendance-api.onrender.com`, so a normal release build works on physical phones. For local development, override it with `--dart-define=API_BASE_URL=http://10.0.2.2:8000` on an Android emulator. Physical phones cannot use `localhost` or `10.0.2.2`; use the computer's Wi-Fi/LAN address (for example `http://192.168.1.20:8000`) and allow port 8000 through the firewall. Both phones and the computer should then be on the same network.
 
 For Render, use the deployed HTTPS address:
 

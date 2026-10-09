@@ -19,9 +19,14 @@ class ApiException implements Exception {
 class ApiService {
   ApiService({http.Client? client}) : _client = client ?? http.Client();
 
+  static const _requestTimeout = Duration(seconds: 90);
+
   static const baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000',
+    // The installable demo APK must work on physical phones even when a build
+    // is run without --dart-define. Local development can still override this
+    // with API_BASE_URL=http://10.0.2.2:8000 (emulator) or a LAN address.
+    defaultValue: 'https://ble-attendance-api.onrender.com',
   );
 
   final http.Client _client;
@@ -38,14 +43,14 @@ class ApiService {
     late http.Response response;
     try {
       response = method == 'GET'
-          ? await _client.get(uri, headers: headers).timeout(const Duration(seconds: 25))
+          ? await _client.get(uri, headers: headers).timeout(_requestTimeout)
           : await _client
               .post(uri, headers: headers, body: jsonEncode(body ?? const {}))
-              .timeout(const Duration(seconds: 25));
+              .timeout(_requestTimeout);
     } catch (_) {
       throw const ApiException(
         'NETWORK_ERROR',
-        'Could not reach the attendance server. Check the API address and network.',
+        'Could not reach the attendance server. Check your internet connection and try again; the demo server may need a minute to wake up.',
         0,
       );
     }
