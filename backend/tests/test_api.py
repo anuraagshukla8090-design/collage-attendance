@@ -22,6 +22,37 @@ def error_code(response) -> str:
 def test_complete_demo_flow_and_guards():
     Base.metadata.drop_all(bind=engine)
     with TestClient(app) as client:
+        teacher_accounts = (
+            ("teacher@demo.com", "Dr. Meera Kapoor"),
+            ("teacher2@demo.com", "Prof. Rohan Verma"),
+            ("teacher3@demo.com", "Dr. Ananya Iyer"),
+        )
+        for email, expected_name in teacher_accounts:
+            response = client.post(
+                "/auth/teacher/login",
+                json={"email": email, "password": "teacher123"},
+            )
+            assert response.status_code == 200
+            assert response.json()["name"] == expected_name
+
+        student_names = (
+            "Rahul Sharma",
+            "Priya Patel",
+            "Arjun Singh",
+            "Aisha Khan",
+            "Vikram Reddy",
+            "Sneha Joshi",
+            "Aditya Nair",
+            "Kavya Deshmukh",
+        )
+        for number, expected_name in enumerate(student_names, start=1):
+            response = client.post(
+                "/auth/student/login",
+                json={"student_code": f"student{number:03}", "password": "student123"},
+            )
+            assert response.status_code == 200
+            assert response.json()["name"] == expected_name
+
         teacher_login = client.post(
             "/auth/teacher/login",
             json={"email": "teacher@demo.com", "password": "teacher123"},

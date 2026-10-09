@@ -29,10 +29,17 @@ Teacher Android app                    Student Android app
 
 | Role | Login | Password |
 |---|---|---|
-| Teacher | `teacher@demo.com` | `teacher123` |
-| Student | `student001` | `student123` |
-| Student | `student002` | `student123` |
-| Student | `student003` | `student123` |
+| Teacher — Dr. Meera Kapoor | `teacher@demo.com` | `teacher123` |
+| Teacher — Prof. Rohan Verma | `teacher2@demo.com` | `teacher123` |
+| Teacher — Dr. Ananya Iyer | `teacher3@demo.com` | `teacher123` |
+| Student — Rahul Sharma | `student001` | `student123` |
+| Student — Priya Patel | `student002` | `student123` |
+| Student — Arjun Singh | `student003` | `student123` |
+| Student — Aisha Khan | `student004` | `student123` |
+| Student — Vikram Reddy | `student005` | `student123` |
+| Student — Sneha Joshi | `student006` | `student123` |
+| Student — Aditya Nair | `student007` | `student123` |
+| Student — Kavya Deshmukh | `student008` | `student123` |
 
 Each student creates a 4- or 6-digit attendance PIN on first login. The first successful student login also creates a random installation ID in Android encrypted storage and registers it with the backend. A different installation is rejected with `DEVICE_MISMATCH`.
 
