@@ -99,6 +99,8 @@ Configuration:
 | `ATTENDANCE_SESSION_SECONDS` | `90` | session duration |
 | `BLE_ROTATION_SECONDS` | `10` | token rotation |
 
+Render is pinned to Python `3.12.11` in the Blueprint. Keep this pin unless all compiled dependencies have been verified against a newer Python runtime.
+
 Run backend tests:
 
 ```powershell
